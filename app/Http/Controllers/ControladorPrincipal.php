@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\User;
-
+use App\fichas;
+use App\partida;
 
 class ControladorPrincipal extends Controller
 {
@@ -28,7 +29,8 @@ class ControladorPrincipal extends Controller
             $user->save();
 
 
-            return $rand_part;
+            
+            return $user->token;
             
 
         }else{
@@ -50,4 +52,42 @@ class ControladorPrincipal extends Controller
         return "Logout +1";
 
     }
+
+
+     public function espera(Request $request)
+    {
+        $arrayUsuarios = User::all();
+
+        return $arrayUsuarios->toJson(JSON_PRETTY_PRINT);
+
+    }
+
+
+    public function jugar(Request $request)
+    {
+
+        try{
+            $newPartida = new Partida;
+            
+           $user1 = $request->input('usuarioCrea');
+           $user2 = $request->input('usuarioAcepta');
+
+           $newPartida->user1 = $user1;
+           $newPartida->user2 = $user2;
+
+           $newPartida->save();
+
+            return "se creó la partida";
+        }
+        catch (\Exception $e){
+            return $e->getMessage();
+
+        }
+
+
+
+    }
+
+
+
 }

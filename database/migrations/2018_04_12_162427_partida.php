@@ -14,8 +14,17 @@ class Partida extends Migration
     public function up()
     {
         //
+        Schema::dropIfExists('partida');
+
         Schema::create('partida', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user1')->default();
+            $table->integer('user2')->default();
+
+            $table->tinyInteger('blancas')->default(0);
+            $table->tinyInteger('negras')->default(0);
+            $table->timestamps();
+            
         });
     }
 

@@ -14,8 +14,12 @@ class Fichas extends Migration
     public function up()
     {
         //
+        Schema::dropIfExists('fichas');
         Schema::create('fichas', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('posInicial')->default('');
+            $table->string('posFinal')->default('');
+            $table->timestamps();
         });
     }
 

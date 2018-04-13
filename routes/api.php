@@ -17,5 +17,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+//LOGEA AL USUARIO Y LE GENERA UN TOKEN
 Route::post('/login','ControladorPrincipal@login');
+
+//HACE UN LOGOUT AL USUARIO
 Route::post('/logout','ControladorPrincipal@logout');
+
+
+//DEVUELVE TODOS LOS USUARIOS
+Route::post('/espera','ControladorPrincipal@espera');
+
+
+Route::post('/juga','ControladorPrincipal@jugar');
+
+Route::post('/mou','ControladorPrincipal@mover');
