@@ -18,8 +18,8 @@ class Partida extends Migration
 
         Schema::create('partida', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user1')->default();
-            $table->integer('user2')->default();
+            $table->integer('user1')->default()->unique();
+            $table->integer('user2')->default()->unique();
 
             $table->tinyInteger('blancas')->default(0);
             $table->tinyInteger('negras')->default(0);
