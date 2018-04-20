@@ -11,6 +11,7 @@ use App\partida;
 class ControladorPrincipal extends Controller
 {
     //
+    //logea usuario y devuelve token
     public function login(Request $request)
     {
         //
@@ -28,11 +29,8 @@ class ControladorPrincipal extends Controller
             $user->token = $rand_part;
             $user->save();
 
-
-            
             return $user->token;
             
-
         }else{
             return "error al loggear";
         }
@@ -40,7 +38,7 @@ class ControladorPrincipal extends Controller
     }
 
 
-
+    //deslogea al usuario
     public function logout(Request $request)
     {
 
@@ -54,9 +52,9 @@ class ControladorPrincipal extends Controller
     }
 
 
+    //devuelve una lista de usuarios que no están en partida
     public function espera(Request $request)
-    {
-        
+    {  
         $enPartida = $this->comprobarPartidas();
         //hace una sentencia sql para devolver todos los usuarios que no están en partida
         return User::select()->whereNotIn('id',$enPartida)->get();
@@ -76,13 +74,25 @@ class ControladorPrincipal extends Controller
 
          $user1 = $request->input('usuarioCrea');
          $user2 = $request->input('usuarioAcepta');
+        
+         $aleatorio = rand(0,1);
+
+
+         //si aleatorio es 0 empieza las blancas
+         if($aleatorio === 0){
+            $newPartida->blancas = 1;
+         }
+         //si aleatorio es 1 empiezan las negras
+         else{
+            $newPartida->negras = 1;
+         }
 
          $newPartida->user1 = $user1;
          $newPartida->user2 = $user2;
 
          $newPartida->save();
 
-         return "se creó la partida";
+         return partida::select('id')->where('user1','=',$user1)->get();
          }
          catch (\Exception $e){
             return $e->getMessage();
