@@ -19,9 +19,6 @@ class ControladorPrincipal extends Controller
     //logea usuario y devuelve token
     public function login(Request $request)
     {
-        //
-        header("Access-Control-Allow-Origin: *");
-        
         $email = $request->input('email');
         $pass = $request->input('password');
 
@@ -35,9 +32,14 @@ class ControladorPrincipal extends Controller
             $user->token = $rand_part;
             $user->save();
 
-            return $user->token;
+            header("Access-Control-Allow-Origin: *");
+
+            return $user;
             
         }else{
+
+            header("Access-Control-Allow-Origin: *");
+
             return "error al loggear";
         }
         
@@ -49,10 +51,13 @@ class ControladorPrincipal extends Controller
     {
 
         $email = $request->input('email');
-        $pass = $request->input('password');
+        $token = $request->input('token');
 
 
         Auth::logout();
+
+
+        header("Access-Control-Allow-Origin: *");
         return "Logout +1";
 
     }
@@ -62,8 +67,16 @@ class ControladorPrincipal extends Controller
     public function espera(Request $request)
     {  
         $enPartida = $this->comprobarPartidas();
-        //hace una sentencia sql para devolver todos los usuarios que no están en partida
-        return User::select()->whereNotIn('id',$enPartida)->get();
+
+        if(count($enPartida) === 0){
+            header("Access-Control-Allow-Origin: *");
+            return User::select()->get();
+        }else{    
+            //hace una sentencia sql para devolver todos los usuarios que no están en partida
+            header("Access-Control-Allow-Origin: *");
+            return User::select()->whereNotIn('id',$enPartida)->get();
+        }
+
  
     }
 
@@ -100,10 +113,11 @@ class ControladorPrincipal extends Controller
 
 
 
-
+         header("Access-Control-Allow-Origin: *");
          return $this->inicializaPartida($newPartida->id);
          }
          catch (\Exception $e){
+            header("Access-Control-Allow-Origin: *");
             return $e->getMessage();
 
          }
@@ -136,6 +150,7 @@ class ControladorPrincipal extends Controller
 
        $peon2->save();
 
+       header("Access-Control-Allow-Origin: *");
        return fichas::all();
     }
 
@@ -159,6 +174,7 @@ class ControladorPrincipal extends Controller
                 }
             }
         }
+        header("Access-Control-Allow-Origin: *");
         return $enPartida;
     }
 
