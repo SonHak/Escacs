@@ -8,6 +8,11 @@ use App\User;
 use App\fichas;
 use App\partida;
 
+const peon_b = 1;
+const peon_n = 2;
+
+
+
 class ControladorPrincipal extends Controller
 {
     //
@@ -15,7 +20,8 @@ class ControladorPrincipal extends Controller
     public function login(Request $request)
     {
         //
-
+        header("Access-Control-Allow-Origin: *");
+        
         $email = $request->input('email');
         $pass = $request->input('password');
 
@@ -67,7 +73,7 @@ class ControladorPrincipal extends Controller
 
     public function jugar(Request $request)
     {
-
+        
         try{
 
          $newPartida = new Partida;
@@ -92,15 +98,46 @@ class ControladorPrincipal extends Controller
 
          $newPartida->save();
 
-         return partida::select('id')->where('user1','=',$user1)->get();
+
+
+
+         return $this->inicializaPartida($newPartida->id);
          }
          catch (\Exception $e){
             return $e->getMessage();
 
          }
+        
 
     }
 
+
+
+
+
+
+    private function inicializaPartida($currentId){
+
+       $peon1 = new fichas;
+
+       $peon1->posInicial = 'c3';
+       $peon1->idPartida = $currentId;
+       $peon1->color = 'blanca';
+       $peon1->figura = 1;
+
+       $peon1->save();
+
+       $peon2 = new fichas;
+       $peon2->posInicial = 'h3';
+       $peon2->idPartida = $currentId;
+       $peon2->color = 'negra';
+       $peon2->figura = 2;
+
+
+       $peon2->save();
+
+       return fichas::all();
+    }
 
 
     //funcion que devuelve una array con los usuarios que están en partida
@@ -124,9 +161,6 @@ class ControladorPrincipal extends Controller
         }
         return $enPartida;
     }
-
-
-
 
 
 
