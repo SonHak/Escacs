@@ -76,6 +76,7 @@ class ControladorPrincipal extends Controller
             header("Access-Control-Allow-Origin: *");
             return User::select()->whereNotIn('id',$enPartida)->get();
         }
+        
 
  
     }
@@ -111,10 +112,9 @@ class ControladorPrincipal extends Controller
 
          $newPartida->save();
 
-
-
-         header("Access-Control-Allow-Origin: *");
-         return $this->inicializaPartida($newPartida->id);
+            header("Access-Control-Allow-Origin: *");
+            return ($newPartida);
+         //return $this->inicializaPartida($newPartida->id);
          }
          catch (\Exception $e){
             header("Access-Control-Allow-Origin: *");
@@ -130,29 +130,43 @@ class ControladorPrincipal extends Controller
 
 
 
-    private function inicializaPartida($currentId){
+    public function setFichas(Request $request){
+       header("Access-Control-Allow-Origin: *");
+       
+       $currentId = $request->input('currentId');
+
+       fichas::where("idPartida", $currentId)->delete();
 
        $peon1 = new fichas;
 
-       $peon1->posInicial = 'c3';
+       $peon1->posInicial = '25';
        $peon1->idPartida = $currentId;
        $peon1->color = 'blanca';
-       $peon1->figura = 1;
-
+       $peon1->figura = 2;
        $peon1->save();
 
        $peon2 = new fichas;
-       $peon2->posInicial = 'h3';
+       $peon2->posInicial = '73';
        $peon2->idPartida = $currentId;
        $peon2->color = 'negra';
-       $peon2->figura = 2;
-
-
+       $peon2->figura = 1;
        $peon2->save();
 
-       header("Access-Control-Allow-Origin: *");
-       return fichas::all();
+
+       return json_encode(["state"=>"1"]);
     }
+
+
+      public function getFichas(Request $request){
+        
+        $id = $request->input('id');
+
+        header("Access-Control-Allow-Origin: *");
+        return fichas::where('idPartida','=',$id)->get();
+
+    }
+
+
 
 
     //funcion que devuelve una array con los usuarios que están en partida
@@ -178,6 +192,33 @@ class ControladorPrincipal extends Controller
         return $enPartida;
     }
 
+
+
+    public function getPartida(Request $request){
+        
+        $id = $request->input('id');
+
+        header("Access-Control-Allow-Origin: *");
+        return Partida::where('user1','=',$id)->orWhere('user2','=',$id)->first();
+
+    }
+
+    public function actualizar(Request $request){
+        
+        $posicion = $request->input('posicion');
+        $idFicha = $request->input('idFigura');
+        $idPartida = $request->input('idPartida');
+
+        $fichaAct = ficha::where('idPartida','=',$idPartida)->where("id","=",$idFicha)->get();
+
+        $fichaAct->posInicial = $posicion;
+        $fichaAct->save();
+
+
+        header("Access-Control-Allow-Origin: *");
+        return $fichaAct;
+
+    }
 
 
 }

@@ -32,3 +32,13 @@ Route::post('/espera','ControladorPrincipal@espera');
 Route::post('/juga','ControladorPrincipal@jugar');
 
 Route::post('/mou','ControladorPrincipal@mover');
+
+Route::post('/getPartida','ControladorPrincipal@getPartida');
+
+Route::post('/getFichas','ControladorPrincipal@getFichas');
+
+Route::post('/actualizar','ControladorPrincipal@actualizar');
+
+Route::post('/setFichas','ControladorPrincipal@setFichas');
+
+
