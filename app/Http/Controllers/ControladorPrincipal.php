@@ -132,7 +132,8 @@ class ControladorPrincipal extends Controller
 
     public function setFichas(Request $request){
        
-       
+      
+
        $currentId = $request->input('currentId');
 
        fichas::where("idPartida", $currentId)->delete();
@@ -151,8 +152,7 @@ class ControladorPrincipal extends Controller
        $peon2->color = 'negra';
        $peon2->figura = 1;
        $peon2->save();
-
-       header("Access-Control-Allow-Origin: *");
+        return response(["state"=>"1"])->header("Access-Control-Allow-Origin:", "*");
        return json_encode(["state"=>"1"]);
     }
 
