@@ -131,7 +131,7 @@ class ControladorPrincipal extends Controller
 
 
     public function setFichas(Request $request){
-       header("Access-Control-Allow-Origin: *");
+       
        
        $currentId = $request->input('currentId');
 
@@ -139,20 +139,20 @@ class ControladorPrincipal extends Controller
 
        $peon1 = new fichas;
 
-       $peon1->posInicial = '25';
+       $peon1->posFinal = '25';
        $peon1->idPartida = $currentId;
        $peon1->color = 'blanca';
        $peon1->figura = 2;
        $peon1->save();
 
        $peon2 = new fichas;
-       $peon2->posInicial = '73';
+       $peon2->posFinal = '73';
        $peon2->idPartida = $currentId;
        $peon2->color = 'negra';
        $peon2->figura = 1;
        $peon2->save();
 
-
+       header("Access-Control-Allow-Origin: *");
        return json_encode(["state"=>"1"]);
     }
 
@@ -204,19 +204,24 @@ class ControladorPrincipal extends Controller
     }
 
     public function actualizar(Request $request){
+
         
-        $posicion = $request->input('posicion');
+
+        $posOrigen = $request->input('posOrigen');
+        $posFinal = $request->input('posFinal');
         $idFicha = $request->input('idFigura');
         $idPartida = $request->input('idPartida');
 
-        $fichaAct = ficha::where('idPartida','=',$idPartida)->where("id","=",$idFicha)->get();
+        $fichaAct = fichas::where('idPartida','=',$idPartida)->where("id","=",$idFicha)
+            ->update(['posInicial' => $posOrigen,'posFinal' => $posFinal]);
 
-        $fichaAct->posInicial = $posicion;
-        $fichaAct->save();
+       // $fichaAct->posInicial = $posOrigen;
+       // $fichaAct->posFinal = $posFinal;
 
+        //$fichaAct->save();
 
         header("Access-Control-Allow-Origin: *");
-        return $fichaAct;
+        return json_encode(["state"=>"1"]);
 
     }
 
